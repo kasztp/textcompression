@@ -5,6 +5,7 @@
 # Usage:    Run the app as standalone if you have Flask installed.
 #           Modify host parameter for flask according to your needs.
 #           Remove debug=True for production!
+import sys
 import itertools
 
 from flask import Flask, request
@@ -23,19 +24,23 @@ def compress(data):
     print(text)
     # Generate word dictionaries for compression & decompression
     unique_words = list(set(itertools.chain(*text)))
+    for word in unique_words:
+        if len(word) <= 2:
+            unique_words.remove(word)
     unique_words.sort(key=len)
     print(unique_words)
     extract_dict = dict()
     compress_dict = dict()
     for index, word in enumerate(unique_words):
-        print(f"Index: {index}  -  Word: {word}")
+        #print(f"Index: {index}  -  Word: {word}")
         extract_dict[str(index)] = word
         compress_dict[word] = str(index)
     print(f"Compress dictionary size: {len(compress_dict)}")
     # Compress text
     for row, line in enumerate(text):
         for column, word in enumerate(line):
-            text[row][column] = compress_dict[word]
+            if word in compress_dict:
+                text[row][column] = compress_dict[word]
     # Convert compressed list to text
     for row, line in enumerate(text):
         separator = " "
@@ -55,16 +60,16 @@ def compress(data):
 
 def extract(data):
     # Extract original text
-    extract_dict = data["dictionary"]
-    print(type(extract_dict))
-    compressed_text = data["payload"]
+    extract_dict = data["payload"]["dictionary"]
+    #print(type(extract_dict))
+    compressed_text = data["payload"]["text"]
     print(f"Compressed text: {compressed_text}")
     keys = list()
     for key in extract_dict.keys():
         keys.append(int(key))
     for key in sorted(keys, reverse=True):
         value = extract_dict.get(str(key))
-        print(f"{key} : {value}")
+        #print(f"{key} : {value}")
         compressed_text = compressed_text.replace(str(key), value)
     print(f"Decompressed text: {compressed_text}")
     # Prepare response
@@ -91,10 +96,12 @@ def home():
 {
   "mode": "extract",
   "original_length": original_length,
-  "dictionary": {
-        0: "data",
-        1: "compressed",
-  "payload": "1 \n0"
+  "payload": {
+        "dictionary": {
+            "0": "data",
+            "1": "compressed",
+        "text": "1 \n0"
+        }
 }
 </p>'''
 
@@ -102,6 +109,10 @@ def home():
 @app.route('/compress', methods=['GET', 'POST'])
 def sort():
     data = request.get_json(silent=True)
+    request_size = request.content_length
+    request_json_size = sys.getsizeof(request.get_json(silent=True))
+    print(f"Incoming request size: {request_size}")
+    print(f"Incoming JSON size: {request_json_size}")
     print(f"Incoming request:\n{data}")
     mode = data['mode']
     print(f"\nRequest type: {mode}")
@@ -112,6 +123,7 @@ def sort():
     else:
         response = "Wrong mode! Only compress/extract are supported."
     print(f"Response:\n{response}")
+    print(f"Response size: {sys.getsizeof(response)}")
     return response
 
 
