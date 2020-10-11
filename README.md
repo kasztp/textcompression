@@ -2,23 +2,23 @@
 Basic Text compression service experiment with Flask.
 
 ## Input example for text:
-
+```
 { 
   "mode": "compress", 
   "payload": "input text"
 }
-
+```
 --------------------------------------
 ## Input example for url:
-
+```
 {
   "mode": "compress",
   "payload": "url"
 }
-
+```
 --------------------------------------
 ## Input example for compressed data:
-
+```
 {
   "mode": "extract",
   "original_length": original_length,
@@ -30,3 +30,4 @@ Basic Text compression service experiment with Flask.
     "text": "1 0"
   }
 }
+```
