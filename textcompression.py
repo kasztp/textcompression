@@ -103,7 +103,7 @@ def extract(data):
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    return """<h1>Sorting Service</h1>
+    return """<h1>Text Compression Service</h1>
 <p>Input example for text:</p>
 <p>
 {
