@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "app_function": "textcompression.app",
+        "profile_name": "default",
+        "project_name": "textcompression",
+        "runtime": "python3.8",
+        "s3_bucket": "zappa-sgoj0uau9",
+        "aws_region": "us-east-1"
+    }
+}
