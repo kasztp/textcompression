@@ -1,4 +1,4 @@
-# TextCompression
+# TextCompression [![Pylint](https://github.com/kasztp/textcompression/actions/workflows/pylint.yml/badge.svg)](https://github.com/kasztp/textcompression/actions/workflows/pylint.yml)
 Basic Text compression service experiment with Flask.
 
 ## Input example for text:
